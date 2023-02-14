@@ -3,9 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
-from .models import Categoria
-from django.shortcuts import render
-from django.http import JsonResponse
+from .models import Categoria, Platos
 
 # /endpoints/login
 @csrf_exempt
@@ -36,6 +34,47 @@ def loginCliente(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
 
+def obtenerPlatos(request):
+    if request.method == "GET":
+        idCat = request.GET.get("categoria")
+
+        if idCat == None:
+            dictError = {
+                "error" : "Enviar categoria."
+            }
+            strError = json.dumps(dictError)
+            return HttpResponse(strError)
+        
+        platosFiltr = []
+
+        if idCat == "-1":
+            platosQS = Platos.objects.all()
+        else:
+            platosQS = Platos.objects.filter(categoria__pk=idCat)
+        
+        for i in platosQS:
+            platosFiltr.append({
+                "id": i.pk ,
+                "title": i.nombre,
+                "price": str(i.precio),
+                "img": i.img,
+                "desc": i.dscr,
+                "category": i.categoria.nombre 
+            })
+
+        dictResponse = {
+            "error": "",
+            "carta": platosFiltr
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
+    else:
+        dictError = {
+            "error": "Tipo de petición no existe"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+
 @csrf_exempt   
 def obtenerCategorias(request):
     if request.method == "GET":
@@ -58,3 +97,4 @@ def obtenerCategorias(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
+
