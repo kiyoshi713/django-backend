@@ -114,17 +114,17 @@ def obtenerRegistroCat(request):
             {
                 "id": 1,
                 "categoria": "Pizzas",
-                "Fecha Registro" : "01-01-2023"
+                "fecha": "01-01-2023"
             },
             {
                 "id": 2,
                 "categoria": "Pastas",
-                "Fecha Registro" : "01-01-2023"
+                "fecha" : "01-01-2023"
             },
             {
                 "id": 3,
                 "categoria": "Bebidas",
-                "Fecha Registro" : "01-01-2023"
+                "fecha": "01-01-2023"
             }
         ]
 
