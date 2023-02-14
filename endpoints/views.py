@@ -135,3 +135,59 @@ def obtenerRegistroCat(request):
         strResponse = json.dumps(dictResponse)
         return HttpResponse(strResponse)
 
+"""
+ID Registro, Plato, Categoria, Descripcion, Fecha Registro
+
+"""
+def obtenerRegistroPlato(request):
+    if request.method == "GET":
+        categoria = request.GET.get("categoria")
+        if categoria == None:
+            dictError = {
+                "error": "Enviar categoria."
+            }
+            strError = json.dumps(dictError)
+            return HttpResponse(strError)
+
+        lista = [
+            {
+                "id": 1,
+                "nombre": "Pizza Americana Familiar",
+                "categoria": "Pizzas",
+                "descripcion": "aeaeaeaeaa",
+                "fecha" : "01-01-2023"
+            },{
+                "id": 2,
+                "nombre": "Tallarines",
+                "categoria": "Pastas",
+                "descripcion": "aeaeaeaeaa",
+                "fecha" : "01-01-2023"
+            },{
+                "id": 3,
+                "nombre": "Inca Kola",
+                "categoria": "Bebidas",
+                "descripcion": "aeaeaeaeaa",
+                "fecha" : "01-01-2023"
+            }
+        ]
+
+        platosFiltr = []
+        if categoria == "-1":
+            platosFiltr=lista
+        else:
+            for i in lista:
+                if i["categoria"] == int(categoria):
+                    platosFiltr.append(i)
+        
+        dictResponse = {
+            "error": "",
+            "platos": list(platosFiltr)
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
+    else:
+        dictError = {
+            "error": "Tipo de peticion no existe.0"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
