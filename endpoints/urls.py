@@ -6,5 +6,6 @@ urlpatterns = [
     path("categorias/listar", views.obtenerCategorias),
     path("platos/listar", views.obtenerPlatos),
     path("hist/cat", views.obtenerRegistroCat),
-    path("hist/plato", views.obtenerRegistroPlato)
+    path("hist/plato", views.obtenerRegistroPlato),
+    path("loginRestaurante", views.loginRestaurante)
 ]

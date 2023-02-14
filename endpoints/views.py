@@ -13,7 +13,7 @@ def loginCliente(request):
         usuario = dictDataRequest["usuario"]
         password = dictDataRequest["password"]
 
-        if usuario == "alumno" and password == "123":
+        if usuario == "cliente" and password == "123":
             # Correcto
             dictOk = {
                 "error": ""
@@ -191,3 +191,39 @@ def obtenerRegistroPlato(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
+        
+def loginRestaurante(request):
+    if request.method == "POST":
+        dictDataRequest = json.loads(request.body)
+        usuario = dictDataRequest["usuario"]
+        password = dictDataRequest["password"]
+
+        if usuario == "trabajador" and password == "valv123":
+            # Correcto
+            dictOk = {
+                "error": ""
+            }
+            return HttpResponse(json.dumps(dictOk))
+        else:
+            # Error login
+            dictError = {
+                "error": "Error en login"
+            }
+            strError = json.dumps(dictError)
+            return HttpResponse(strError)
+
+    else:
+        dictError = {
+            "error": "Tipo de peticion no existe"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+
+def Registrar_EntregaPedido(request):
+    return 0
+
+def Mostrar_ListaPedido(request):
+    return 0
+
+def Verificar_EstadoPedido(request):
+    return 0
