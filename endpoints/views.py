@@ -56,7 +56,7 @@ def obtenerPlatos(request):
             platosFiltr.append({
                 "id": i.pk ,
                 "title": i.nombre,
-                "price": str(i.precio),
+                "price": float(i.precio),
                 "img": i.img,
                 "desc": i.dscr,
                 "category": i.categoria.nombre 
@@ -97,4 +97,41 @@ def obtenerCategorias(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
+
+"""
+ID Registro , Categoria , Fecha
+
+"""
+def obtenerRegistroCat(request):
+    if request.method != "GET":
+        dictError = {
+            "error": "Tipo de peticion no existe."
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+    else: 
+        lista = [
+            {
+                "id": 1,
+                "categoria": "Pizzas",
+                "Fecha Registro" : "01-01-2023"
+            },
+            {
+                "id": 2,
+                "categoria": "Pastas",
+                "Fecha Registro" : "01-01-2023"
+            },
+            {
+                "id": 3,
+                "categoria": "Bebidas",
+                "Fecha Registro" : "01-01-2023"
+            }
+        ]
+
+        dictResponse = {
+            "error":"",
+            "Categorias": lista
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
 
