@@ -8,5 +8,7 @@ urlpatterns = [
     path("hist/cat", views.obtenerRegistroCat),
     path("hist/plato", views.obtenerRegistroPlato),
     path("loginRestaurante", views.loginRestaurante),
-    path("pedidoRelizado", views.Mostrar_ListaPedido)
+    path("pedidoRelizado", views.Mostrar_ListaPedido),
+    path("registrarPedido",views.Registrar_EntregaPedido),
+    path("actualizarPedido",views.Actualizar_Pedido)
 ]
