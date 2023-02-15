@@ -7,5 +7,6 @@ urlpatterns = [
     path("platos/listar", views.obtenerPlatos),
     path("hist/cat", views.obtenerRegistroCat),
     path("hist/plato", views.obtenerRegistroPlato),
-    path("loginRestaurante", views.loginRestaurante)
+    path("loginRestaurante", views.loginRestaurante),
+    path("pedidoRelizado", views.Mostrar_ListaPedido)
 ]

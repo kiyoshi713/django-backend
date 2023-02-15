@@ -191,7 +191,7 @@ def obtenerRegistroPlato(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
-        
+@csrf_exempt        
 def loginRestaurante(request):
     if request.method == "POST":
         dictDataRequest = json.loads(request.body)
@@ -223,7 +223,43 @@ def Registrar_EntregaPedido(request):
     return 0
 
 def Mostrar_ListaPedido(request):
-    return 0
+    if request.method != "GET":
+        dictError = {
+            "error": "Tipo de peticion no existe."
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+    else: 
+        lista = [
+            {
+                "id": 1,
+                "cod":12345,
+                "producto" : "Pizza Americana",
+                "precio": "32 soles",
+                "estado": "Enviado"
+            },
+            {
+                "id": 2,
+                "cod":730289,
+                "producto" : "Pizza Suprema",
+                "precio": "42 soles",
+                "estado": "En preparación"
+            },
+            {
+                "id": 3,
+                "cod":194491,
+                "producto" : "Pizza Hawaiana",
+                "precio": "35 soles",
+                "estado": "En preparación"
+            }
+        ]
+
+        dictResponse = {
+            "error":"",
+            "pedido": lista
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
 
 def Verificar_EstadoPedido(request):
     return 0
