@@ -13,7 +13,7 @@ def loginCliente(request):
         usuario = dictDataRequest["usuario"]
         password = dictDataRequest["password"]
 
-        if usuario == "cliente" and password == "123":
+        if usuario == "alumno" and password == "123":
             # Correcto
             dictOk = {
                 "error": ""
@@ -191,7 +191,8 @@ def obtenerRegistroPlato(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
-@csrf_exempt        
+
+
 def loginRestaurante(request):
     if request.method == "POST":
         dictDataRequest = json.loads(request.body)
@@ -238,15 +239,15 @@ def Registrar_EntregaPedido(request):
             {
                 "id": 2,
                 "cod":12346,
-                "producto" : "Pizza Americana",
-                "cliente": "Miley Cyrus",
+                "producto" : "Pizza Suprema",
+                "cliente": "Alan Garcia",
                 "estado": "Enviado"
             },
             {
                 "id": 3,
                 "cod":12349,
-                "producto" : "Pizza Americana",
-                "cliente": "Miley Cyrus",
+                "producto" : "Pizza Hawaiana",
+                "cliente": "Renzo Cavero",
                 "estado": "Enviado"
             }
         ]
@@ -269,25 +270,26 @@ def Mostrar_ListaPedido(request):
         lista = [
             {
                 "id": 1,
-                "cod":12345,
+                "cod":12347,
                 "producto" : "Pizza Americana",
                 "precio": "32 soles",
                 "estado": "Enviado"
             },
             {
                 "id": 2,
-                "cod":730289,
+                "cod":12346,
                 "producto" : "Pizza Suprema",
                 "precio": "42 soles",
-                "estado": "En preparación"
+                "estado": "Enviado"
             },
             {
                 "id": 3,
-                "cod":194491,
+                "cod":12349,
                 "producto" : "Pizza Hawaiana",
                 "precio": "35 soles",
-                "estado": "En preparación"
-            }
+                "estado": "Finalizado"
+            },
+            
         ]
 
         dictResponse = {
@@ -296,7 +298,7 @@ def Mostrar_ListaPedido(request):
         }
         strResponse = json.dumps(dictResponse)
         return HttpResponse(strResponse)
-
+    
 def Actualizar_Pedido(request):
    
     if request.method != "POST":
@@ -308,6 +310,7 @@ def Actualizar_Pedido(request):
     
     dictCategoria = json.loads(request.body)
 
+    #Obtiene el objeto que pasó por body
     identificador = dictCategoria["id"]
     cat = Categoria.objects.get(pk=identificador) # Obtenemos cat de bd
 
@@ -324,5 +327,43 @@ def Actualizar_Pedido(request):
     }
     return HttpResponse(json.dumps(dictOK))
 
+
 def Verificar_EstadoPedido(request):
-    return 0
+    if request.method != "GET":
+        dictError = {
+            "error": "Tipo de peticion no existe."
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+    else: 
+        lista = [
+            {
+                "id": 1,
+                "cod":12345,
+                "producto" : "Pizza Americana",
+                "cliente": "Miley Cyrus",
+                "hora": "1 pm"
+            },
+            {
+                "id": 2,
+                "cod":12346,
+                "producto" : "Pizza Suprema",
+                "cliente": "Alan Garcia",
+                "hora": "2 pm"
+            },
+            {
+                "id": 3,
+                "cod":12349,
+                "producto" : "Pizza Hawaiana",
+                "cliente": "Renzo Cavero",
+                "hora": "3 pm"
+            }]
+        
+
+        dictResponse = {
+            "error":"",
+            "pedido": lista
+        }
+        strResponse = json.dumps(dictResponse["pedido"])
+        return HttpResponse(strResponse)
+
