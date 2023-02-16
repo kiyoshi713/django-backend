@@ -11,5 +11,6 @@ urlpatterns = [
     path("pedidoRelizado", views.Mostrar_ListaPedido),
     path("registrarPedido",views.Registrar_EntregaPedido),
     path("actualizarPedido",views.Actualizar_Pedido),
-    path("cuestionario", views.Cuestionario)
+    path("cuestionario", views.Cuestionario),
+    path("verificarPedido",views.Verificar_EstadoPedido)
 ]
