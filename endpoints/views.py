@@ -191,6 +191,26 @@ def obtenerRegistroPlato(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
+
+def Cuestionario(request):
+    if request.method != "POST":
+        dictError={
+            "error": "tipo de peticion no existe"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+    dictCuestionario = json.loads(request.body)
+    restaurante = dictCuestionario["restaurante"]
+    valoracion = dictCuestionario["valoracion"]
+    opinion = dictCuestionario["opinion"]
+
+    cto = Form(restaurante=restaurante, valoracion=valoracion,opinion=opinion)
+    cto.save()
+    dictOk = {
+        "error":""
+    }
+    return HttpResponse(json.dumps(dictOk))
+
 @csrf_exempt        
 def loginRestaurante(request):
     if request.method == "POST":

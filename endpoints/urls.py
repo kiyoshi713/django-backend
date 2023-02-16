@@ -10,5 +10,6 @@ urlpatterns = [
     path("loginRestaurante", views.loginRestaurante),
     path("pedidoRelizado", views.Mostrar_ListaPedido),
     path("registrarPedido",views.Registrar_EntregaPedido),
-    path("actualizarPedido",views.Actualizar_Pedido)
+    path("actualizarPedido",views.Actualizar_Pedido),
+    path("cuestionario", views.Cuestionario)
 ]
