@@ -17,3 +17,14 @@ class Platos(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class Form(models.Model):
+    comentario = models.CharField(max_length=250)
+    Valoracion_cuantificacion = (
+        ("1", "Muy satisfecho"),
+        ("2", "Satisfecho"),
+        ("3", "Regular"),
+        ("4", "No satisfechos"),
+        ("5", "No recomendable"))
+    def __str__(self):
+        return self.nombre

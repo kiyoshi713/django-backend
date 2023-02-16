@@ -30,4 +30,10 @@ class Migration(migrations.Migration):
                 ('categoria', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='endpoints.categoria')),
             ],
         ),
+        migrations.CreateModel(
+            name='Form',
+            fields=[
+        ('comentario', models.CharField(max_length=250)),        
+        ('estado', models.CharField(choices=[('1', 'muy Satisfecho'), ('2', 'satisfecho'),('3', 'regular'),('4', 'no satisfecho'),('5', 'no recomendable')], max_length=1)),
+    ],),
     ]
