@@ -13,22 +13,23 @@ def loginCliente(request):
         username = dictDataRequest["username"]
         password = dictDataRequest["password"]
 
-        clientes = Cliente.objects.all()
+        clientes = Cliente.objects.filter(username=username, password=password)
 
-        for i in clientes:
-            if i.username==username and i.password==password:
-                dictOk = {
-                    "error": " ",
-                    "cliente_id": i.pk 
+        if clientes:
+            dictOk = {
+                "error": "",
+                "cliente":{
+                    "username": clientes.username,
+                    "password": clientes.password
                 }
-                return HttpResponse(json.dumps(dictOk))
-            else:
-                dictError = {
-                    "error": "No existe esta cuenta"
-                }
-                strError = json.dumps(dictError)
-                return HttpResponse(strError)
-
+            }
+            return HttpResponse(json.dumps(dictOk))
+        else:
+            dictError = {
+                "error": "No existe cuenta"
+            }
+            strError = json.dumps(username)
+            return HttpResponse(strError)
     else:
         dictError = {
             "error": "Tipo de peticion no existe"
