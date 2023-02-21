@@ -1,24 +1,46 @@
 from django.db import models
 
+class Cliente(models.Model):
+    username = models.CharField(max_length=25,primary_key=True)
+    password = models.CharField(max_length=25)
 
-class Categoria(models.Model):
+    def __str__(self):
+        return self.username
+
+class Restaurant_Cat(models.Model):
+    nombre = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.nombre
+
+class Restaurant(models.Model):
+    username = models.CharField(max_length=25)
+    password = models.CharField(max_length=25)
+    nombre = models.CharField(max_length=25)
+    descripcion = models.CharField(max_length=150)
+    logo = models.CharField(max_length=30)
+    categoria_Rest = models.ForeignKey(Restaurant_Cat, on_delete=models.CASCADE, null= False)
+
+class Categoria_Plato(models.Model):
     
     nombre = models.CharField(max_length=50)
 
     def __str__(self):
         return self.nombre
 
-class Platos(models.Model):
+class Plato(models.Model):
     nombre = models.CharField(max_length=50)
     precio = models.DecimalField(decimal_places=2, max_digits=4)
     img = models.URLField()
     dscr = models.CharField(max_length=100)
-    categoria = models.ForeignKey(Categoria , on_delete=models.CASCADE,null=True)
+    categoria = models.ForeignKey(Categoria_Plato , on_delete=models.CASCADE,null=False)
 
     def __str__(self):
         return self.nombre
 
 class Form(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
+    rest = models.ForeignKey(Restaurant, on_delete=models.CASCADE,null=True)
     comentario = models.CharField(max_length=250)
     Valoracion_cuantificacion = (
         ("1", "Muy satisfecho"),
@@ -28,3 +50,7 @@ class Form(models.Model):
         ("5", "No recomendable"))
     def __str__(self):
         return self.nombre
+
+class Menu(models.Model):
+    id_Rest = models.ForeignKey(Restaurant, on_delete=models.CASCADE, null=False)
+    id_Plato = models.ForeignKey(Plato,on_delete=models.CASCADE, null=False)
