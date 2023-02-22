@@ -13,14 +13,14 @@ def loginCliente(request):
         username = dictDataRequest["username"]
         password = dictDataRequest["password"]
 
-        clientes = Cliente.objects.filter(username=username, password=password)
+        client = Cliente.objects.filter(username=username, password=password).first()
 
-        if clientes:
+        if client:
             dictOk = {
                 "error": "",
                 "cliente":{
-                    "username": clientes.username,
-                    "password": clientes.password
+                    "username": client.username,
+                    "password": client.password
                 }
             }
             return HttpResponse(json.dumps(dictOk))
