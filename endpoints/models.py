@@ -14,7 +14,7 @@ class Restaurant_Cat(models.Model):
         return self.nombre
 
 class Restaurant(models.Model):
-    username = models.CharField(max_length=25)
+    usuario = models.CharField(max_length=25)
     password = models.CharField(max_length=25)
     nombre = models.CharField(max_length=25)
     descripcion = models.CharField(max_length=150)

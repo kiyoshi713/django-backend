@@ -57,3 +57,37 @@ def Formulario(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
+
+@csrf_exempt
+def loginRestaurante(request):
+    if request.method == "POST":
+        dictDataRequest = json.loads(request.body)
+        usuario = dictDataRequest["usuario"]
+        password = dictDataRequest["password"]
+
+        Rest = Restaurant.objects.filter(usuario=usuario, password=password).first()
+
+        if Rest:
+            # Correcto
+            dictOk = {
+                "error": "",
+                "restaurante":{
+                    "username": Rest.usuario,
+                    "password": Rest.password
+                }
+            }
+            return HttpResponse(json.dumps(dictOk))
+        else:
+            # Error login
+            dictError = {
+                "error": "Error en login"
+            }
+            strError = json.dumps(dictError)
+            return HttpResponse(strError)
+
+    else:
+        dictError = {
+            "error": "Tipo de peticion no existe"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
