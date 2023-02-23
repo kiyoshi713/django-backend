@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
-from .models import Cliente, Restaurant,Plato, Restaurant_Cat,Categoria_Plato,Form,Menu
+from .models import Cliente, Restaurant,Plato,Categoria_Plato,Form, CategoriasporRestaurante
 
 # /endpoints/login
 @csrf_exempt
@@ -90,4 +90,104 @@ def loginRestaurante(request):
             "error": "Tipo de peticion no existe"
         }
         strError = json.dumps(dictError)
+        return HttpResponse(strError)
+
+def Carta(request):
+    #http://127.0.0.1:8000/endpoints/Carta?categoria=-1&restaurant=2
+    
+    if request.method == "GET":
+        restaurant = request.GET.get("restaurant")
+        categoria = request.GET.get("categoria")
+        if restaurant==None and categoria==None:
+            dictError = {
+                "error": "Enviar restaurante y categoria como query parameter"
+            }
+            strError = json.dumps(dictError)
+            return HttpResponse(strError)
+        CartaQuerySet = Plato.objects.all()
+        listaCarta = []
+
+        if categoria == "-1":
+            CartaQuerySet = Plato.objects.filter(restaurante__pk=restaurant)
+            for i in CartaQuerySet:
+                listaCarta.append({
+                    "id":i.id,
+                    "title":i.nombre,
+                    "price": float(i.precio),
+                    "desc": i.dscr,
+                    "img": i.img,
+                    "restaurante":{
+                        "idRest": i.restaurante.id,
+                        "nombreRest": i.restaurante.nombre
+                    },
+                    "categoria":{
+                        "idCat": i.categoria.id,
+                        "nombreCat": i.categoria.nombre
+                    }   
+                })
+        else:
+            CartaQuerySet = Plato.objects.filter(restaurante__pk=restaurant, categoria__pk=categoria)
+            for i in CartaQuerySet:
+                listaCarta.append({
+                    "id":i.id,
+                    "title":i.nombre,
+                    "price": float(i.precio),
+                    "desc": i.dscr,
+                    "img": i.img,
+                    "restaurante":{
+                        "idRest": i.restaurante.id,
+                        "nombreRest": i.restaurante.nombre
+                    },
+                    "categoria":{
+                        "idCat": i.categoria.id,
+                        "nombreCat": i.categoria.nombre
+                    }
+                })
+        dictResponse = {
+            "error":" ",
+            "carta": list(listaCarta)
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
+    else:
+        dictError={
+            "error": "Peticion no existe",
+        }
+        strError=json.dumps(dictError)
+        return HttpResponse(strError)
+
+def CategoriasxRestaurante(request):
+    #http://127.0.0.1:8000/endpoints/Categorias?restaurant=-1
+    if request.method=="GET":
+        restaurant = request.GET.get("restaurant")
+
+        if restaurant==None:
+            dictError={
+                "error": "Enviar categoria"
+            }
+            strError = json.dumps(dictError)
+            return HttpResponse(strError)
+        
+        CategoriasFiltradas = []
+
+        if restaurant=="-1":
+            categoriasQS = CategoriasporRestaurante.objects.filter
+        else:
+            categoriasQS = CategoriasporRestaurante.objects.filter(restaurant__pk=restaurant)
+        for i in categoriasQS:
+            CategoriasFiltradas.append({
+                "id":i.categoria.id,
+                "categoria": i.categoria.nombre
+            })
+        dictResponse = {
+            "error": " ",
+            "categorias": CategoriasFiltradas
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
+    else:
+        dictError={
+            "error": "Peticion no existe"
+        }
+        strError=json.dumps(dictError)
         return HttpResponse(strError)

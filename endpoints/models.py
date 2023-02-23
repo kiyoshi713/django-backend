@@ -34,7 +34,7 @@ class Plato(models.Model):
     img = models.URLField()
     dscr = models.CharField(max_length=100)
     categoria = models.ForeignKey(Categoria_Plato , on_delete=models.CASCADE,null=False)
-
+    restaurante = models.ForeignKey(Restaurant,on_delete=models.CASCADE, null=True)
     def __str__(self):
         return self.nombre
 
@@ -51,6 +51,6 @@ class Form(models.Model):
     def __str__(self):
         return self.nombre
 
-class Menu(models.Model):
-    id_Rest = models.ForeignKey(Restaurant, on_delete=models.CASCADE, null=False)
-    id_Plato = models.ForeignKey(Plato,on_delete=models.CASCADE, null=False)
+class CategoriasporRestaurante(models.Model):
+    categoria = models.ForeignKey(Categoria_Plato,on_delete=models.CASCADE,null=False)
+    restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE,null=False)
