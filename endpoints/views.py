@@ -91,3 +91,5 @@ def loginRestaurante(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
+
+        #hola
