@@ -17,8 +17,8 @@ class Restaurant(models.Model):
     usuario = models.CharField(max_length=25)
     password = models.CharField(max_length=25)
     nombre = models.CharField(max_length=25)
-    descripcion = models.CharField(max_length=150)
-    logo = models.CharField(max_length=30)
+    descripcion = models.CharField(max_length=500)
+    logo = models.CharField(max_length=100)
     categoria_Rest = models.ForeignKey(Restaurant_Cat, on_delete=models.CASCADE, null= False)
 
 class Categoria_Plato(models.Model):

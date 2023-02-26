@@ -92,41 +92,42 @@ def loginRestaurante(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
 
-# def Restaurante(request):
-#     if request.method=="GET":
-#         restaurante = request.GET.get("id")
-#         if restaurante == None:
-#             dictError = {
-#                 "error" : "Enviar restaurante."
-#             }
-#             strError = json.dumps(dictError)
-#             return HttpResponse(strError)
+def Restaurante(request):
+    #http://127.0.0.1:8000/endpoints/Restaurantes?id=1
+     if request.method=="GET":
+         restaurante = request.GET.get("id")
+         if restaurante == None:
+             dictError = {
+                 "error" : "Enviar restaurante."
+             }
+             strError = json.dumps(dictError)
+             return HttpResponse(strError)
         
-#         restFiltr = []
+         restFiltr = []
 
-#         if restaurante == "-1":
-#             restQS = Restaurant.objects.all()
-#         else:
-#             restQS = Restaurant.objects.filter(restaurante = id)
-#         for i in restQS:
-#             restFiltr.append({
-#                 "id": i.id,
-#                 "nombre": i.nombre,
-#                 "desc": i.descripcion,
-#                 "img": i.logo
-#             })
-#         dictResponse = {
-#             "error": " ",
-#             "restaurantes": restFiltr
-#         }
-#         strResponse = json.dumps(dictResponse)
-#         return HttpResponse(strResponse)
-#     else:
-#         dictError={
-#             "error": "Tipo de peticion no existe"
-#         }
-#         strError = json.dumps(dictError)
-#         return HttpResponse(strError)
+         if restaurante == "-1":
+             restQS = Restaurant.objects.all()
+         else:
+             restQS = Restaurant.objects.filter(id = restaurante)
+         for i in restQS:
+             restFiltr.append({
+                 "id": i.id,
+                 "nombre": i.nombre,
+                 "desc": i.descripcion,
+                 "img": i.logo
+             })
+         dictResponse = {
+             "error": " ",
+             "restaurantes": restFiltr
+         }
+         strResponse = json.dumps(dictResponse)
+         return HttpResponse(strResponse)
+     else:
+         dictError={
+             "error": "Tipo de peticion no existe"
+         }
+         strError = json.dumps(dictError)
+         return HttpResponse(strError)
 
 def Carta(request):
     #http://127.0.0.1:8000/endpoints/Carta?categoria=-1&restaurant=2
