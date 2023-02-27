@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
             name='Restaurant',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('username', models.CharField(max_length=25)),
+                ('usuario', models.CharField(max_length=25)),
                 ('password', models.CharField(max_length=25)),
                 ('nombre', models.CharField(max_length=25)),
                 ('descripcion', models.CharField(max_length=150)),

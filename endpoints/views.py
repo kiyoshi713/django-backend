@@ -72,7 +72,7 @@ def loginRestaurante(request):
             dictOk = {
                 "error": "",
                 "restaurante":{
-                    "username": Rest.usuario,
+                    "usuario": Rest.usuario,
                     "password": Rest.password
                 }
             }
@@ -82,7 +82,7 @@ def loginRestaurante(request):
             dictError = {
                 "error": "Error en login"
             }
-            strError = json.dumps(dictError)
+            strError = json.dumps(usuario)
             return HttpResponse(strError)
 
     else:
@@ -91,6 +91,46 @@ def loginRestaurante(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
+    
+def Mostrar_ListaPedido(request):
+    if request.method != "GET":
+        dictError = {
+            "error": "Tipo de peticion no existe."
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+    else: 
+        lista = [
+            {
+                "id": 1,
+                "cod":12347,
+                "producto" : "Pizza Americana",
+                "precio": "32 soles",
+                "estado": "Enviado"
+            },
+            {
+                "id": 2,
+                "cod":12346,
+                "producto" : "Pizza Suprema",
+                "precio": "42 soles",
+                "estado": "Enviado"
+            },
+            {
+                "id": 3,
+                "cod":12349,
+                "producto" : "Pizza Hawaiana",
+                "precio": "35 soles",
+                "estado": "Finalizado"
+            },
+            
+        ]
+
+        dictResponse = {
+            "error":"",
+            "pedido": lista
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
 
 def Restaurante(request):
     #http://127.0.0.1:8000/endpoints/Restaurantes?id=1
