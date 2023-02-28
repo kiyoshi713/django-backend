@@ -14,13 +14,14 @@ class Restaurant_Cat(models.Model):
         return self.nombre
 
 class Restaurant(models.Model):
+    restaurant_estado=(("A","activo"),("I","inactivo"))
     usuario = models.CharField(max_length=25)
     password = models.CharField(max_length=25)
     nombre = models.CharField(max_length=25)
     descripcion = models.CharField(max_length=500)
     logo = models.CharField(max_length=100)
     categoria_Rest = models.ForeignKey(Restaurant_Cat, on_delete=models.CASCADE, null= False)
-
+    estado=models.CharField(max_length=1,choices=restaurant_estado)
     def __str__(self):
         return self.nombre
 
@@ -43,17 +44,21 @@ class Plato(models.Model):
 
 class Form(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
-    rest = models.ForeignKey(Restaurant, on_delete=models.CASCADE,null=True)
+    rest = models.CharField(max_length=100)
+    valoracion=models.CharField(max_length=2)
     comentario = models.CharField(max_length=250)
-    Valoracion_cuantificacion = (
-        ("1", "Muy satisfecho"),
-        ("2", "Satisfecho"),
-        ("3", "Regular"),
-        ("4", "No satisfechos"),
-        ("5", "No recomendable"))
+    
     def __str__(self):
         return self.nombre
 
 class CategoriasporRestaurante(models.Model):
     categoria = models.ForeignKey(Categoria_Plato,on_delete=models.CASCADE,null=False)
     restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE,null=False)
+
+class orden(models.Model):
+    usuario=models.ForeignKey(Cliente,on_delete=models.CASCADE,null=False)
+    monto=models.DecimalField(decimal_places=2,max_digits=5)
+    direccion=models.CharField(max_length=40)
+    fecha=models.CharField(max_length=10)
+    def __str__(self):
+        return self.usuario
