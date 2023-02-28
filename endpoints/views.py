@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
-from .models import Cliente, Restaurant,Plato,Categoria_Plato,Form, CategoriasporRestaurante
+from .models import Cliente,Restaurant_Cat,Restaurant,Plato,Categoria_Plato,Form, CategoriasporRestaurante
 
 # /endpoints/login
 @csrf_exempt
@@ -42,10 +42,9 @@ def Formulario(request):
         dictDataRequest = json.loads(request.body)
         cliente = dictDataRequest["cliente"]
         rest = dictDataRequest["rest"]
-        comentario = dictDataRequest["comentario"]
-        Valoracion_cuantificacion = dictDataRequest["Valoracion_cuantificacion"] 
-        
-        frm = Form(cliente=cliente, rest=rest, comentario=comentario,Valoracion_cuantificacion=Valoracion_cuantificacion)
+        comentario = dictDataRequest["comentario"] 
+        valoracion=dictDataRequest["valoracion"]
+        frm = Form(cliente=cliente, rest=rest, comentario=comentario,Valoracion=valoracion)
         frm.save()
         dictOk = {
             "error": " "
@@ -375,3 +374,26 @@ def CategoriasxRestaurante(request):
         }
         strError=json.dumps(dictError)
         return HttpResponse(strError)
+    
+def obtenerCategorias(request):
+    if request.method == "GET":
+        listaCategoriasQuerySet = Restaurant_Cat.objects.all()
+        listaCategorias = []
+        for c in listaCategoriasQuerySet:
+            listaCategorias.append({
+                "id" : c.id,
+                "nombre" : c.nombre
+            })
+
+        dictOK = {
+            "error" : "",
+            "categorias" : listaCategorias
+        }
+        return HttpResponse(json.dumps(dictOK))
+
+    else:
+        dictError = {
+            "error": "Tipo de peticion no existe"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)    
