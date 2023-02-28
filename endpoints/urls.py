@@ -8,5 +8,6 @@ urlpatterns = [
     path("Restaurantes", views.Restaurante),
     path("cuestionario", views.Formulario),
     path("loginRest", views.loginRestaurante),
-    path("Mostrar_ListaPedido", views.Mostrar_ListaPedido)
+    path("Mostrar_ListaPedido", views.Mostrar_ListaPedido),
+    path("restaurant/cat",views.obtenerCategorias)
 ]
