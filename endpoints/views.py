@@ -131,6 +131,113 @@ def Mostrar_ListaPedido(request):
         strResponse = json.dumps(dictResponse)
         return HttpResponse(strResponse)
 
+def Actualizar_Pedido(request):
+   
+    if request.method != "POST":
+        dictError = {
+            "error": "Tipo de peticion no existe"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+    
+    dictCategoria = json.loads(request.body)
+
+    #Obtiene el objeto que pasó por body
+    identificador = dictCategoria["id"]
+    cat = Categoria.objects.get(pk=identificador) # Obtenemos cat de bd
+
+    if dictCategoria.get("nombre") != None:
+        cat.nombre = dictCategoria.get("nombre")
+
+    if dictCategoria.get("estado") != None:
+        cat.estado = dictCategoria.get("estado")
+
+    cat.save() # Se modifica la bd
+
+    dictOK = {
+        "error" : ""
+    }
+    return HttpResponse(json.dumps(dictOK))
+
+def Registrar_EntregaPedido(request):
+    if request.method != "GET":
+        dictError = {
+            "error": "Tipo de peticion no existe."
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+    else: 
+        lista = [
+            {
+                "id": 1,
+                "cod":12345,
+                "producto" : "Pizza Americana",
+                "cliente": "Miley Cyrus",
+                "estado": "Enviado"
+            },
+            {
+                "id": 2,
+                "cod":12346,
+                "producto" : "Pizza Suprema",
+                "cliente": "Alan Garcia",
+                "estado": "Enviado"
+            },
+            {
+                "id": 3,
+                "cod":12349,
+                "producto" : "Pizza Hawaiana",
+                "cliente": "Renzo Cavero",
+                "estado": "Enviado"
+            }
+        ]
+
+        dictResponse = {
+            "error":"",
+            "pedido": lista
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
+
+
+def Verificar_EstadoPedido(request):
+    if request.method != "GET":
+        dictError = {
+            "error": "Tipo de peticion no existe."
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+    else: 
+        lista = [
+            {
+                "id": 1,
+                "cod":12345,
+                "producto" : "Pizza Americana",
+                "cliente": "Miley Cyrus",
+                "hora": "1 pm"
+            },
+            {
+                "id": 2,
+                "cod":12346,
+                "producto" : "Pizza Suprema",
+                "cliente": "Alan Garcia",
+                "hora": "2 pm"
+            },
+            {
+                "id": 3,
+                "cod":12349,
+                "producto" : "Pizza Hawaiana",
+                "cliente": "Renzo Cavero",
+                "hora": "3 pm"
+            }]
+        
+
+        dictResponse = {
+            "error":"",
+            "pedido": lista
+        }
+        strResponse = json.dumps(dictResponse["pedido"])
+        return HttpResponse(strResponse)
+
 def Restaurante(request):
     #http://127.0.0.1:8000/endpoints/Restaurantes?id=1
      if request.method=="GET":
