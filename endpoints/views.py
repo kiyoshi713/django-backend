@@ -207,6 +207,7 @@ def Verificar_EstadoPedido(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
     else: 
+        listaOrdenQuerySet = Orden.objects.all()
         lista = [
             {
                 "id": 1,
