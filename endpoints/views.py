@@ -232,7 +232,8 @@ def Restaurante(request):
                  "id": i.id,
                  "nombre": i.nombre,
                  "desc": i.descripcion,
-                 "img": i.logo
+                 "img": i.logo,
+                 "estado":i.estado
              })
          dictResponse = {
              "error": " ",
