@@ -1,9 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.core import serializers
 import json
-from .models import Cliente,Restaurant_Cat,Restaurant,Plato,Categoria_Plato,Form, CategoriasporRestaurante
+from django.http import JsonResponse
+from .models import Cliente,Restaurant_Cat,Restaurant,Plato,Categoria_Plato,Form, CategoriasporRestaurante, orden
 
 # /endpoints/login
 @csrf_exempt
@@ -99,6 +101,8 @@ def Mostrar_ListaPedido(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
     else: 
+        ordenqs = orden.objects.all()
+
         lista = [
             {
                 "id": 1,
@@ -131,72 +135,54 @@ def Mostrar_ListaPedido(request):
         strResponse = json.dumps(dictResponse)
         return HttpResponse(strResponse)
 
+@csrf_exempt
+@require_POST
 def Actualizar_Pedido(request):
-   
-    if request.method != "POST":
-        dictError = {
-            "error": "Tipo de peticion no existe"
-        }
-        strError = json.dumps(dictError)
-        return HttpResponse(strError)
-    
-    dictCategoria = json.loads(request.body)
+   if request.method == 'POST':
+        data = json.loads(request.body)
+        orden_id = data.get('id')
+        nuevo_estado = data.get('estado')
+        if orden.objects.filter(id=orden_id ).exists():
+            ord = orden.objects.get(id=orden_id )
+            ord.estado = nuevo_estado
+            ord.save()
 
-    #Obtiene el objeto que pasó por body
-    identificador = dictCategoria["id"]
-    cat = Categoria.objects.get(pk=identificador) # Obtenemos cat de bd
+            return JsonResponse({'id': orden_id, 'estado': nuevo_estado})
+        else:
+            return JsonResponse({'error': f'Pedido con id {orden_id} no encontrado'})
 
-    if dictCategoria.get("nombre") != None:
-        cat.nombre = dictCategoria.get("nombre")
-
-    if dictCategoria.get("estado") != None:
-        cat.estado = dictCategoria.get("estado")
-
-    cat.save() # Se modifica la bd
-
-    dictOK = {
-        "error" : ""
-    }
-    return HttpResponse(json.dumps(dictOK))
-
+@csrf_exempt
 def Registrar_EntregaPedido(request):
-    if request.method != "GET":
+    if request.method == "POST":
+        dictCodig = json.loads(request.body)
+        codig = dictCodig["codig"]
+        error = "Este pedido no existe"
+        if codig != None:
+            try:
+                ord = orden.objects.get(codigo=codig)
+                productos = {"id": ord.id,
+                            "nombre": ord.usuario,
+                            "detalles": ord.monto, 
+                            "direccion": ord.direccion, 
+                            "metodo": ord.fecha,
+                            "codigo": ord.estado}
+                dictOK = {
+                    "error": "",
+                    "producto": productos
+                }
+                strOK = json.dumps(dictOK)
+                return HttpResponse(strOK)
+            except ord.DoesNotExist:
+                pass
+        else:
+            error = "Envie un codigo de pedido"
         dictError = {
-            "error": "Tipo de peticion no existe."
+            "error": error
         }
-        strError = json.dumps(dictError)
-        return HttpResponse(strError)
-    else: 
-        lista = [
-            {
-                "id": 1,
-                "cod":12345,
-                "producto" : "Pizza Americana",
-                "cliente": "Miley Cyrus",
-                "estado": "Enviado"
-            },
-            {
-                "id": 2,
-                "cod":12346,
-                "producto" : "Pizza Suprema",
-                "cliente": "Alan Garcia",
-                "estado": "Enviado"
-            },
-            {
-                "id": 3,
-                "cod":12349,
-                "producto" : "Pizza Hawaiana",
-                "cliente": "Renzo Cavero",
-                "estado": "Enviado"
-            }
-        ]
-
-        dictResponse = {
-            "error":"",
-            "pedido": lista
-        }
-        strResponse = json.dumps(dictResponse)
-        return HttpResponse(strResponse)
+        return HttpResponse(json.dumps(dictError))
+    else:
+        return HttpResponse("Tipo de petición incorrecto, usar POST")
+    
 
 
 def Verificar_EstadoPedido(request):
@@ -207,37 +193,22 @@ def Verificar_EstadoPedido(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
     else: 
-        listaOrdenQuerySet = Orden.objects.all()
-        lista = [
-            {
-                "id": 1,
-                "cod":12345,
-                "producto" : "Pizza Americana",
-                "cliente": "Miley Cyrus",
-                "hora": "1 pm"
-            },
-            {
-                "id": 2,
-                "cod":12346,
-                "producto" : "Pizza Suprema",
-                "cliente": "Alan Garcia",
-                "hora": "2 pm"
-            },
-            {
-                "id": 3,
-                "cod":12349,
-                "producto" : "Pizza Hawaiana",
-                "cliente": "Renzo Cavero",
-                "hora": "3 pm"
-            }]
-        
-
+        ordenes = orden.objects.all()
+        listaOrdenes =[]
+        for o in ordenes:
+            listaOrdenes.append({
+                'id': o.id,
+                'usuario':o.usuario,
+                'direccion': o.direccion,
+                'fecha': o.fecha,
+                'estado': o.estado
+            })
+   
         dictResponse = {
             "error":"",
-            "pedido": lista
+            "orden": listaOrdenes
         }
-        strResponse = json.dumps(dictResponse["pedido"])
-        return HttpResponse(strResponse)
+        return JsonResponse({'ordenes': listaOrdenes})
 
 def Restaurante(request):
     #http://127.0.0.1:8000/endpoints/Restaurantes?id=1
