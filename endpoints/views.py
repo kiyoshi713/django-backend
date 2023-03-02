@@ -70,14 +70,19 @@ def loginRestaurante(request):
 
         if Rest:
             # Correcto
-            dictOk = {
+            Resta = []
+            for o in Rest:
+                    Resta.append({"id": o.id,
+                                "nombre": o.username,
+                                "password": o.password
+                                }
+                    )
+            dictOK = {
                 "error": "",
-                "restaurante":{
-                    "usuario": Rest.usuario,
-                    "password": Rest.password
-                }
+                "producto": Resta
             }
-            return HttpResponse(json.dumps(dictOk))
+            strOK = json.dumps(dictOK)
+            return HttpResponse(strOK)
         else:
             # Error login
             dictError = {
@@ -146,10 +151,19 @@ def Actualizar_Pedido(request):
             ord = orden.objects.get(id=orden_id )
             ord.estado = nuevo_estado
             ord.save()
-
-            return JsonResponse({'id': orden_id, 'estado': nuevo_estado})
+            dictOK = {
+                    "error": "",
+                    "id": orden_id,
+                    "estado": nuevo_estado
+                }
+            strOK = json.dumps(dictOK)
+            return HttpResponse(strOK)
         else:
-            return JsonResponse({'error': f'Pedido con id {orden_id} no encontrado'})
+            dictOK = {
+                    "error": "no existe"
+                }
+            strOK = json.dumps(dictOK)
+            return HttpResponse(strOK)
 
 @csrf_exempt
 def Registrar_EntregaPedido(request):
@@ -157,29 +171,33 @@ def Registrar_EntregaPedido(request):
         dictCodig = json.loads(request.body)
         codig = dictCodig["codig"]
         error = "Este pedido no existe"
+        productos = []
+        print(codig)
         if codig != None:
-            try:
-                ord = orden.objects.get(codigo=codig)
-                productos = {"id": ord.id,
-                            "nombre": ord.usuario,
-                            "detalles": ord.monto, 
-                            "direccion": ord.direccion, 
-                            "metodo": ord.fecha,
-                            "codigo": ord.estado}
+                ord = orden.objects.filter(id=codig)
+                for o in ord:
+                    print(o.monto)
+                    productos.append({"id": o.id,
+                                "nombre": o.usuario.username,
+                                "detalles": int(o.monto), 
+                                "direccion": o.direccion, 
+                                "fecha": o.fecha,
+                                "estado": o.estado}
+                    )
+                    print(productos)
                 dictOK = {
                     "error": "",
                     "producto": productos
                 }
                 strOK = json.dumps(dictOK)
                 return HttpResponse(strOK)
-            except ord.DoesNotExist:
-                pass
+            
         else:
             error = "Envie un codigo de pedido"
-        dictError = {
-            "error": error
-        }
-        return HttpResponse(json.dumps(dictError))
+            dictError = {
+                "error": error
+            }
+            return HttpResponse(json.dumps(dictError))
     else:
         return HttpResponse("Tipo de petición incorrecto, usar POST")
     
@@ -208,7 +226,10 @@ def Verificar_EstadoPedido(request):
             "error":"",
             "orden": listaOrdenes
         }
-        return JsonResponse({'ordenes': listaOrdenes})
+        #convertirlo con httpresponse jason.dumps 
+        strOK = json.dumps(dictResponse)
+        return HttpResponse(strOK)
+    
 
 def Restaurante(request):
     #http://127.0.0.1:8000/endpoints/Restaurantes?id=1

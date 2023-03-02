@@ -62,4 +62,4 @@ class orden(models.Model):
     fecha=models.CharField(max_length=10)
     estado=models.CharField(max_length=10)
     def __str__(self):
-        return self.usuario
+        return self.usuario.username
